@@ -121,11 +121,13 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this);
 
         // TODO: Get data from preferences
-        isRemoteDismiss = true;
+        isRemoteDismiss = PreferenceData.REMOTE_DISMISS_ENABLED.getValue(this);
 
         isAlarm = getIntent().hasExtra(EXTRA_ALARM);
+
         if (isAlarm) {
             alarm = getIntent().getParcelableExtra(EXTRA_ALARM);
+
             isVibrate = alarm.isVibrate;
             if (alarm.hasSound())
                 sound = alarm.getSound();
@@ -138,7 +140,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
         date.setText(FormatUtils.format(new Date(), FormatUtils.FORMAT_DATE + ", " + FormatUtils.getShortFormat(this)));
 
-        if (!sound.isSetVolumeSupported()) {
+        if (sound != null && !sound.isSetVolumeSupported()) {
             // Use the backup method if it is not supported
 
             audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -184,9 +186,10 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
                     getWindow().setAttributes(params);
                     getWindow().addFlags(WindowManager.LayoutParams.FLAGS_CHANGED);
 
-                    if (sound.isSetVolumeSupported()) {
-                        float newVolume = Math.min(1f, slowWakeProgress);
+                    if (sound != null && sound.isSetVolumeSupported()) {
+                        float newVolume = Math.min(1f, slowWakeProgress) * PreferenceData.MANUAL_VOLUME_SETTING.<Float>getValue(AlarmActivity.this);
 
+                        System.out.println(newVolume);
                         sound.setVolume(alarmio, newVolume);
                     } else if (currentVolume < originalVolume) {
                         // Backup volume setting behavior
@@ -267,7 +270,6 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
                     BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     String inputLine;
                     while ((inputLine = in.readLine()) != null) {
-                        System.out.println(inputLine);
                         if (inputLine.equals("true")){
                             isRemoteDismissAllowed = true;
 
@@ -303,15 +305,17 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
     @Override
     public void onSlideLeft() {
-        if (isRemoteDismiss && !isRemoteDismissAllowed) {
+        if (isRemoteDismiss && !isRemoteDismissAllowed
+                && PreferenceData.REMOTE_DISMISS_SNOOZES.<Integer>getValue(this) >= PreferenceData.REMOTE_DISMISS_MAX_SNOOZES.<Integer>getValue(this)) {
             // Check with network again
             checkIfRemoteDismissAllowed(0);
 
             return;
+        } else if (isRemoteDismiss && !isRemoteDismissAllowed) {
+            PreferenceData.REMOTE_DISMISS_SNOOZES.setValue(this, PreferenceData.REMOTE_DISMISS_SNOOZES.<Integer>getValue(this) + 1);
         }
-        System.out.println("s" + isRemoteDismiss);
 
-        final int[] minutes = new int[]{2, 5, 10, 20, 30, 60};
+        final int[] minutes = new int[]{1, 2, 5, 10, 20, 30, 60};
         CharSequence[] names = new CharSequence[minutes.length + 1];
         for (int i = 0; i < minutes.length; i++) {
             names[i] = FormatUtils.formatUnit(AlarmActivity.this, minutes[i]);
@@ -323,12 +327,11 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         new AlertDialog.Builder(AlarmActivity.this, isDark ? R.style.Theme_AppCompat_Dialog_Alert : R.style.Theme_AppCompat_Light_Dialog_Alert)
                 .setItems(names, (dialog, which) -> {
                     if (which < minutes.length) {
-                        TimerData timer = alarmio.newTimer();
-                        timer.setDuration(TimeUnit.MINUTES.toMillis(minutes[which]), alarmio);
-                        timer.setVibrate(AlarmActivity.this, isVibrate);
-                        timer.setSound(AlarmActivity.this, sound);
-                        timer.set(alarmio, ((AlarmManager) AlarmActivity.this.getSystemService(Context.ALARM_SERVICE)));
-                        alarmio.onTimerStarted();
+                        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+                        alarm.setEnabled(this, alarmManager, true);
+                        alarm.setTime(this, alarmManager,
+                                alarm.time.getTimeInMillis() + minutes[which] * 1000 * 60);
 
                         finish();
                     } else {
@@ -363,6 +366,9 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
             return;
         }
+        // Reset snoozes done
+        PreferenceData.REMOTE_DISMISS_SNOOZES.setValue(this, 0);
+
         overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
         finish();
     }

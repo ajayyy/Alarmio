@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.disposables.Disposable;
 import me.jfenn.alarmio.R;
 import me.jfenn.alarmio.adapters.AlarmsAdapter;
+import me.jfenn.alarmio.data.PreferenceData;
 import me.jfenn.alarmio.interfaces.ContextFragmentInstantiator;
 
 public class AlarmsFragment extends BasePagerFragment {

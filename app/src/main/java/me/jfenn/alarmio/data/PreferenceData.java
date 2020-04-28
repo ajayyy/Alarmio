@@ -22,6 +22,10 @@ public enum PreferenceData {
     SLEEP_REMINDER_TIME(25200000L), //milliseconds
     SLOW_WAKE_UP(true),
     SLOW_WAKE_UP_TIME(300000L), //milliseconds
+    REMOTE_DISMISS_ENABLED(true),
+    REMOTE_DISMISS_MAX_SNOOZES(3),
+    REMOTE_DISMISS_SNOOZES(0),
+    MANUAL_VOLUME_SETTING(0.2f),
     ALARM_NAME("%d/ALARM_NAME", null),
     ALARM_TIME("%d/ALARM_TIME", (long) 0),
     ALARM_ENABLED("%d/ALARM_ENABLED", true),
@@ -33,7 +37,6 @@ public enum PreferenceData {
     TIMER_VIBRATE("%d/TIMER_VIBRATE", true),
     TIMER_SOUND("%d/TIMER_SOUND", ""),
     TIME_ZONE_ENABLED("%s/TIME_ZONE_ENABLED", false);
-
     private String name;
     private Object defaultValue;
 

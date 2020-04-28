@@ -33,6 +33,7 @@ import jahirfiquitiva.libs.fabsmenu.FABsMenuListener;
 import jahirfiquitiva.libs.fabsmenu.TitleFAB;
 import me.jfenn.alarmio.Alarmio;
 import me.jfenn.alarmio.R;
+import me.jfenn.alarmio.activities.MainActivity;
 import me.jfenn.alarmio.adapters.SimplePagerAdapter;
 import me.jfenn.alarmio.data.AlarmData;
 import me.jfenn.alarmio.data.PreferenceData;
@@ -86,6 +87,9 @@ public class HomeFragment extends BaseFragment {
 
         behavior = BottomSheetBehavior.from(bottomSheet);
         behavior.setHideable(false);
+
+        // Reset snoozes done
+        PreferenceData.REMOTE_DISMISS_SNOOZES.setValue(this.getContext(), 0);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
