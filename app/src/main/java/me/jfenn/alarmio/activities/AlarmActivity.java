@@ -1,10 +1,12 @@
 package me.jfenn.alarmio.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +22,12 @@ import android.widget.TextView;
 import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.aesthetic.AestheticActivity;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -60,6 +68,10 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
     private TimerData timer;
     private SoundData sound;
     private boolean isVibrate;
+
+    private String remoteDismissAuthCode = "CHANGE_THIS";
+    private boolean isRemoteDismiss;
+    private boolean isRemoteDismissAllowed;
 
     private boolean isSlowWake;
     private long slowWakeMillis;
@@ -107,6 +119,9 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
         isSlowWake = PreferenceData.SLOW_WAKE_UP.getValue(this);
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this);
+
+        // TODO: Get data from preferences
+        isRemoteDismiss = true;
 
         isAlarm = getIntent().hasExtra(EXTRA_ALARM);
         if (isAlarm) {
@@ -237,8 +252,65 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         startActivity(new Intent(intent));
     }
 
+    /**
+     * @return Has the remote allowed the client to be dismissed
+     */
+    @SuppressLint("StaticFieldLeak")
+    private void checkIfRemoteDismissAllowed(int triggerType) {
+        new AsyncTask<Void,Void,Void>(){
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    URL url = new URL("https://remotealarm.ajay.app/api/v1/allowAlarmDismiss/" + remoteDismissAuthCode);
+                    URLConnection connection = url.openConnection();
+
+                    BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    String inputLine;
+                    while ((inputLine = in.readLine()) != null) {
+                        System.out.println(inputLine);
+                        if (inputLine.equals("true")){
+                            isRemoteDismissAllowed = true;
+
+                            // Finished checking, go back to the cancelled functions
+                            runOnUiThread(() -> {
+                                if (triggerType == 0) {
+                                    onSlideLeft();
+                                } else if (triggerType == 1) {
+                                    onSlideRight();
+                                }
+                            });
+
+                            break;
+                        }
+                    }
+
+                    in.close();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute();
+    }
+
     @Override
     public void onSlideLeft() {
+        if (isRemoteDismiss && !isRemoteDismissAllowed) {
+            // Check with network again
+            checkIfRemoteDismissAllowed(0);
+
+            return;
+        }
+        System.out.println("s" + isRemoteDismiss);
+
         final int[] minutes = new int[]{2, 5, 10, 20, 30, 60};
         CharSequence[] names = new CharSequence[minutes.length + 1];
         for (int i = 0; i < minutes.length; i++) {
@@ -285,6 +357,12 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
     @Override
     public void onSlideRight() {
+        if (isRemoteDismiss && !isRemoteDismissAllowed) {
+            // Check with network again
+            checkIfRemoteDismissAllowed(1);
+
+            return;
+        }
         overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
         finish();
     }
