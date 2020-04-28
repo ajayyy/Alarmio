@@ -53,8 +53,7 @@
 
         <activity
             android:name=".activities.AlarmActivity"
-            android:launchMode="singleTask"
-            android:excludeFromRecents="true" />
+            android:launchMode="singleTask" />
 
         <activity
             android:name=".activities.FileChooserActivity"
