@@ -189,7 +189,6 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
                     if (sound != null && sound.isSetVolumeSupported()) {
                         float newVolume = Math.min(1f, slowWakeProgress) * PreferenceData.MANUAL_VOLUME_SETTING.<Float>getValue(AlarmActivity.this);
 
-                        System.out.println(newVolume);
                         sound.setVolume(alarmio, newVolume);
                     } else if (currentVolume < originalVolume) {
                         // Backup volume setting behavior
