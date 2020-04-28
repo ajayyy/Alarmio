@@ -69,7 +69,6 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
     private SoundData sound;
     private boolean isVibrate;
 
-    private String remoteDismissAuthCode = "CHANGE_THIS";
     private boolean isRemoteDismiss;
     private boolean isRemoteDismissAllowed;
 
@@ -268,7 +267,9 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    URL url = new URL("https://remotealarm.ajay.app/api/v1/allowAlarmDismiss/" + remoteDismissAuthCode);
+                    URL url = new URL(PreferenceData.REMOTE_DISMISS_SERVER.getValue(AlarmActivity.this) +
+                            "/api/v1/allowAlarmDismiss/"
+                            + PreferenceData.REMOTE_DISMISS_AUTHCODE.getValue(AlarmActivity.this));
                     URLConnection connection = url.openConnection();
 
                     BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));

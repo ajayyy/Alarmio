@@ -89,4 +89,11 @@
     <string name="day_thursday_abbr">T</string>
     <string name="day_friday_abbr">F</string>
     <string name="day_saturday_abbr">S</string>
+
+    <string name="title_remote_dismiss_enabled" translatable="false">Remote Dismiss</string>
+    <string name="desc_remote_dismiss_enabled"  translatable="false">This will only allow dismissing or snoozing when another device has allowed it.</string>
+    <string name="title_remote_dismiss_authcode" translatable="false">Remote Dismiss Auth Code</string>
+    <string name="desc_remote_dismiss_authcode"  translatable="false">The auth code used to allow dismissing if remote dismiss is enabled</string>
+    <string name="title_remote_dismiss_auto_dismiss" translatable="false">Remote Dismiss Auto Dismiss</string>
+    <string name="desc_remote_dismiss_auto_dismiss" translatable="false">This will keep checking if it is possible to dismiss every second and auto dismiss when allowed.</string>
 </resources>
