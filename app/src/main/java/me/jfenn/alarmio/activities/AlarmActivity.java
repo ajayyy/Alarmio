@@ -200,6 +200,11 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
                     }
                 }
 
+                if (PreferenceData.REMOTE_DISMISS_AUTO_DISMISS.getValue(AlarmActivity.this)) {
+                    // Check if a dismiss can happen
+                    checkIfRemoteDismissAllowed(1);
+                }
+
                 handler.postDelayed(this, 1000);
             }
         };
