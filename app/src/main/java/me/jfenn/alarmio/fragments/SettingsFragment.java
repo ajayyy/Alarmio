@@ -33,6 +33,7 @@ import me.jfenn.alarmio.data.preference.BooleanPreferenceData;
 import me.jfenn.alarmio.data.preference.CustomPreferenceData;
 import me.jfenn.alarmio.data.preference.ImageFilePreferenceData;
 import me.jfenn.alarmio.data.preference.RingtonePreferenceData;
+import me.jfenn.alarmio.data.preference.SliderPreferenceData;
 import me.jfenn.alarmio.data.preference.StringPreferenceData;
 import me.jfenn.alarmio.data.preference.ThemePreferenceData;
 import me.jfenn.alarmio.data.preference.TimePreferenceData;
@@ -67,9 +68,11 @@ public class SettingsFragment extends BasePagerFragment implements Consumer {
                 new TimePreferenceData(PreferenceData.SLEEP_REMINDER_TIME, R.string.title_sleep_reminder_time),
                 new BooleanPreferenceData(PreferenceData.SLOW_WAKE_UP, R.string.title_slow_wake_up, R.string.desc_slow_wake_up),
                 new TimePreferenceData(PreferenceData.SLOW_WAKE_UP_TIME, R.string.title_slow_wake_up_time),
+                new SliderPreferenceData(PreferenceData.MANUAL_VOLUME_SETTING, 100, R.string.title_manual_volume, R.string.desc_manual_volume),
                 new BooleanPreferenceData(PreferenceData.REMOTE_DISMISS_ENABLED, R.string.title_remote_dismiss_enabled, R.string.desc_remote_dismiss_enabled),
                 new StringPreferenceData(PreferenceData.REMOTE_DISMISS_AUTHCODE, R.string.title_remote_dismiss_authcode, R.string.desc_remote_dismiss_authcode),
-                new BooleanPreferenceData(PreferenceData.REMOTE_DISMISS_AUTO_DISMISS, R.string.title_remote_dismiss_auto_dismiss, R.string.desc_remote_dismiss_auto_dismiss)
+                new BooleanPreferenceData(PreferenceData.REMOTE_DISMISS_AUTO_DISMISS, R.string.title_remote_dismiss_auto_dismiss, R.string.desc_remote_dismiss_auto_dismiss),
+                new SliderPreferenceData(PreferenceData.REMOTE_DISMISS_MAX_SNOOZES, 10, R.string.title_remote_max_snoozes, R.string.desc_remote_dismiss_auto_dismiss)
         ));
 
         if (Build.VERSION.SDK_INT >= 23) {

@@ -82,6 +82,9 @@
     <string name="msg_battery_optimizations_switch_enable">Turn on the switch next to \"Alarmio\". You may need to scroll down… a lot.</string>
     <string name="title_ignore_battery_optimizations">Ignore Battery Optimizations</string>
 
+    <string name="title_manual_volume">Manual Alarm Volume</string>
+    <string name="desc_manual_volume">Your device\'s alarm volume will be multiplied by this number. This will give your more precise control as some devices limit volume to device fixed number of steps.</string>
+
     <string name="day_sunday_abbr">S</string>
     <string name="day_monday_abbr">M</string>
     <string name="day_tuesday_abbr">T</string>
@@ -96,4 +99,6 @@
     <string name="desc_remote_dismiss_authcode"  translatable="false">The auth code used to allow dismissing if remote dismiss is enabled</string>
     <string name="title_remote_dismiss_auto_dismiss" translatable="false">Remote Dismiss Auto Dismiss</string>
     <string name="desc_remote_dismiss_auto_dismiss" translatable="false">This will keep checking if it is possible to dismiss every second and auto dismiss when allowed.</string>
+    <string name="title_remote_max_snoozes" translatable="false">Max Snoozes Before Remote Required</string>
+    <string name="desc_remote_max_snoozes" translatable="false">If above 0, it will not require confirmation from the other device for the given number of snoozes.</string>
 </resources>
