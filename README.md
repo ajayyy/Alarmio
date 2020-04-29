@@ -5,15 +5,20 @@ Alarmio Remote is a fork of Alarmio that allows you to require a remote device t
 
 See the [original repo](https://github.com/fennifith/Alarmio) for info about Alarmio itself.
 
+# Features
+
+- Prevent you from dismissing the alarm until you send a request from another device
+- Optional: Allow a number of snoozes before you are required to get use the other device to disable the alarm
+- Optional: Auto dismiss when when the request from the other device is sent
+
 # Usage
 
-TODO: Make this part of the options page
-
-- Change the `remoteDismissAuthCode` variable in `AlarmActivity.java`
-- OPTIONAL: Change the line referencing `https://remotealarm.ajay.app/` in `AlarmActivity.java` to your own self-hosted version of [the server](https://github.com/ajayyy/AlarmioRemoteServer). This is not required and you can use my server if you'd like.
-- OPTIONAL: Change `REMOTE_DISMISS` options in `PreferenceData.java`
-- Setup another device to send a POST request to `https://remotealarm.ajay.app/api/v1/allowAlarmDismiss/[your-auth-code-goes-here]` or your own self-hosted server. This allows dismissing and snoozing for 5 minutes. I have this on an old phone in another room.
 - Build and run the app on your device (see below if you have issues)
+- Change the auth code option in the options
+- Enable "Remote Dismiss" in the options and customise the other options to your choosing
+- Setup another device to send a POST request to `https://remotealarm.ajay.app/api/v1/allowAlarmDismiss/[your-auth-code-goes-here]` or your own self-hosted server. This allows dismissing and snoozing for 5 minutes. I have this on an old phone in another room.
+
+- OPTIONAL: Change the server URL in the options with your own self-hosted version of [the server](https://github.com/ajayyy/AlarmioRemoteServer). This is not required and you can use my server if you'd like.
 
 ### Advanced options
 
@@ -21,7 +26,9 @@ You can send a POST request to `https://remotealarm.ajay.app/api/v1/allowAlarmDi
 
 You can send a POST request to `https://remotealarm.ajay.app/api/v1/denyAlarmDismiss/[your-auth-code-goes-here]` to deny dismissing early.
 
-In `PreferenceData.java`, changing `REMOTE_DISMISS_MAX_SNOOZES` allows you to allow a certain number of snoozes before requiring the other device to allow it.
+# Screenshots
+
+![Settings page](screenshot1.jpg)
 
 ## Permissions
 
