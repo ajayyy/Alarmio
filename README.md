@@ -13,7 +13,7 @@ See the [original repo](https://github.com/fennifith/Alarmio) for info about Ala
 
 # Usage
 
-- Build and run the app on your device (see below if you have issues)
+- Download the [latest release](https://github.com/ajayyy/AlarmioRemote/releases/latest)
 - Change the auth code option in the options
 - Enable "Remote Dismiss" in the options and customise the other options to your choosing
 - Setup another device to send a POST request to `https://remotealarm.ajay.app/api/v1/allowAlarmDismiss/[your-auth-code-goes-here]` or your own self-hosted server. This allows dismissing and snoozing for 5 minutes. I have this on an old phone in another room.
