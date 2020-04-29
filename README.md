@@ -28,7 +28,7 @@ You can send a POST request to `https://remotealarm.ajay.app/api/v1/denyAlarmDis
 
 # Screenshots
 
-![Settings page](screenshot1.jpg)
+![Settings page](screenshots/screenshot1.jpg)
 
 ## Permissions
 
