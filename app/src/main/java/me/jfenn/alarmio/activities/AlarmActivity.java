@@ -336,7 +336,7 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
 
                         alarm.setEnabled(this, alarmManager, true);
                         alarm.setTime(this, alarmManager,
-                                alarm.time.getTimeInMillis() + minutes[which] * 1000 * 60);
+                                System.currentTimeMillis() + minutes[which] * 1000 * 60);
 
                         finish();
                     } else {
