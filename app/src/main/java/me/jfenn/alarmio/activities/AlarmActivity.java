@@ -119,7 +119,6 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
         isSlowWake = PreferenceData.SLOW_WAKE_UP.getValue(this);
         slowWakeMillis = PreferenceData.SLOW_WAKE_UP_TIME.getValue(this);
 
-        // TODO: Get data from preferences
         isRemoteDismiss = PreferenceData.REMOTE_DISMISS_ENABLED.getValue(this);
 
         isAlarm = getIntent().hasExtra(EXTRA_ALARM);
@@ -320,48 +319,60 @@ public class AlarmActivity extends AestheticActivity implements SlideActionListe
             PreferenceData.REMOTE_DISMISS_SNOOZES.setValue(this, PreferenceData.REMOTE_DISMISS_SNOOZES.<Integer>getValue(this) + 1);
         }
 
-        final int[] minutes = new int[]{1, 2, 5, 10, 20, 30, 60};
-        CharSequence[] names = new CharSequence[minutes.length + 1];
-        for (int i = 0; i < minutes.length; i++) {
-            names[i] = FormatUtils.formatUnit(AlarmActivity.this, minutes[i]);
-        }
-
-        names[minutes.length] = getString(R.string.title_snooze_custom);
-
         stopAnnoyingness();
-        new AlertDialog.Builder(AlarmActivity.this, isDark ? R.style.Theme_AppCompat_Dialog_Alert : R.style.Theme_AppCompat_Light_Dialog_Alert)
-                .setItems(names, (dialog, which) -> {
-                    if (which < minutes.length) {
-                        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-
-                        alarm.setEnabled(this, alarmManager, true);
-                        alarm.setTime(this, alarmManager,
-                                System.currentTimeMillis() + minutes[which] * 1000 * 60);
-
-                        finish();
-                    } else {
-                        TimeChooserDialog timerDialog = new TimeChooserDialog(AlarmActivity.this);
-                        timerDialog.setListener((hours, minutes1, seconds) -> {
-                            TimerData timer = alarmio.newTimer();
-                            timer.setVibrate(AlarmActivity.this, isVibrate);
-                            timer.setSound(AlarmActivity.this, sound);
-                            timer.setDuration(TimeUnit.HOURS.toMillis(hours)
-                                            + TimeUnit.MINUTES.toMillis(minutes1)
-                                            + TimeUnit.SECONDS.toMillis(seconds),
-                                    alarmio);
-
-                            timer.set(alarmio, ((AlarmManager) getSystemService(Context.ALARM_SERVICE)));
-                            alarmio.onTimerStarted();
-                            finish();
-                        });
-                        timerDialog.show();
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
-                .show();
-
         overlay.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+
+        if (!PreferenceData.SHOW_SNOOZE_OPTIONS.<Boolean>getValue(this)) {
+            // Snooze for 10 minutes, TODO: Add a setting for it
+            snoozeAlarm(System.currentTimeMillis() + 10 * 1000 * 60);
+
+            finish();
+        } else {
+            final int[] minutes = new int[]{1, 2, 5, 10, 20, 30, 60};
+            CharSequence[] names = new CharSequence[minutes.length + 1];
+            for (int i = 0; i < minutes.length; i++) {
+                names[i] = FormatUtils.formatUnit(AlarmActivity.this, minutes[i]);
+            }
+
+            names[minutes.length] = getString(R.string.title_snooze_custom);
+
+            new AlertDialog.Builder(AlarmActivity.this, isDark ? R.style.Theme_AppCompat_Dialog_Alert : R.style.Theme_AppCompat_Light_Dialog_Alert)
+                    .setItems(names, (dialog, which) -> {
+                        if (which < minutes.length) {
+                            snoozeAlarm(System.currentTimeMillis() + minutes[which] * 1000 * 60);
+
+                            finish();
+                        } else {
+                            TimeChooserDialog timerDialog = new TimeChooserDialog(AlarmActivity.this);
+                            timerDialog.setListener((hours, minutes1, seconds) -> {
+                                TimerData timer = alarmio.newTimer();
+                                timer.setVibrate(AlarmActivity.this, isVibrate);
+                                timer.setSound(AlarmActivity.this, sound);
+                                timer.setDuration(TimeUnit.HOURS.toMillis(hours)
+                                                + TimeUnit.MINUTES.toMillis(minutes1)
+                                                + TimeUnit.SECONDS.toMillis(seconds),
+                                        alarmio);
+
+                                timer.set(alarmio, ((AlarmManager) getSystemService(Context.ALARM_SERVICE)));
+                                alarmio.onTimerStarted();
+                                finish();
+                            });
+                            timerDialog.show();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
+                    .show();
+        }
     }
+
+    private void snoozeAlarm(long timeMillis) {
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        alarm.setEnabled(this, alarmManager, true);
+        alarm.setTime(this, alarmManager,
+                timeMillis);
+    }
+
 
     @Override
     public void onSlideRight() {

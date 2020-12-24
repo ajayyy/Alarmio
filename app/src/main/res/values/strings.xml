@@ -103,4 +103,6 @@
     <string name="desc_remote_dismiss_auto_dismiss" translatable="false">This will keep checking if it is possible to dismiss every second and auto dismiss when allowed.</string>
     <string name="title_remote_max_snoozes" translatable="false">Max Snoozes Before Remote Required</string>
     <string name="desc_remote_max_snoozes" translatable="false">If above 0, it will not require confirmation from the other device for the given number of snoozes.</string>
+    <string name="title_show_snooze_options" translatable="false">Show snooze options</string>
+    <string name="desc_show_snooze_options" translatable="false">When enabled, it will show a dialog asking you for how long your snooze should be</string>
 </resources>

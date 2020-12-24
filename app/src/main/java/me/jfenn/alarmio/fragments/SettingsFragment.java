@@ -73,7 +73,8 @@ public class SettingsFragment extends BasePagerFragment implements Consumer {
                 new StringPreferenceData(PreferenceData.REMOTE_DISMISS_AUTHCODE, R.string.title_remote_dismiss_authcode, R.string.desc_remote_dismiss_authcode),
                 new StringPreferenceData(PreferenceData.REMOTE_DISMISS_SERVER, R.string.title_remote_dismiss_server, R.string.desc_remote_dismiss_server),
                 new BooleanPreferenceData(PreferenceData.REMOTE_DISMISS_AUTO_DISMISS, R.string.title_remote_dismiss_auto_dismiss, R.string.desc_remote_dismiss_auto_dismiss),
-                new SliderPreferenceData(PreferenceData.REMOTE_DISMISS_MAX_SNOOZES, 10, R.string.title_remote_max_snoozes, R.string.desc_remote_dismiss_auto_dismiss)
+                new SliderPreferenceData(PreferenceData.REMOTE_DISMISS_MAX_SNOOZES, 10, R.string.title_remote_max_snoozes, R.string.desc_remote_dismiss_auto_dismiss),
+                new BooleanPreferenceData(PreferenceData.SHOW_SNOOZE_OPTIONS, R.string.title_show_snooze_options, R.string.desc_show_snooze_options)
         ));
 
         if (Build.VERSION.SDK_INT >= 23) {
